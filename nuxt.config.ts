@@ -9,17 +9,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
   ],
   ssr: false,
-  //ESSAI
 
-
-
-  /*
-  typescript //remove at end bcz slow down
-    : {
-    typeCheck
-      : true
-  },
-  */
   runtimeConfig: {
     public: {
       googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,

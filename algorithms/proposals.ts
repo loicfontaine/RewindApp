@@ -9,46 +9,49 @@ import { createApp } from "vue";
 import App from "../app.vue";
 import parameters from "../rewindconfig.json";
 
-
 interface TypePriority {
     [key: string]: number;
 }
 
-const pinia = createPinia()
-const app = createApp(App)
-app.use(pinia)
+const pinia = createPinia();
+const app = createApp(App);
+app.use(pinia);
 
 export function getProposals(suggestions: Suggestion[]): Suggestion[] {
     const { lastIdUserModified } = storeToRefs(useSuggestionStore());
     const proposals = ref([] as Suggestion[]);
-    console.log("suggestions", suggestions);
-    proposals.value = suggestions.filter((suggestion) => {
-        //pas très propre mais pas trouvé mieux
-        const index = proposals.value.findIndex(
-            (element) => element.id === suggestion.id
-        );
-        return index === -1 || index === proposals.value.indexOf(suggestion);
-
-    }).map((suggestion: Suggestion) => ({
-        ...suggestion,
-        startTime: new Date(suggestion.startTime),
-        endTime: new Date(suggestion.endTime),
-    }));
+    proposals.value = suggestions
+        //filter doubles
+        .filter(
+            (suggestion, index, self) =>
+                index ===
+                self.findIndex(
+                    (t) => t.startTime.getTime() === suggestion.startTime.getTime()
+                )
+        )
+        .map((suggestion: Suggestion) => ({
+            ...suggestion,
+            startTime: new Date(suggestion.startTime),
+            endTime: new Date(suggestion.endTime),
+        }));
 
     proposals.value = proposals.value
+
         .filter((suggestion) => {
-            // regarde les type priority et s'il y'a un chevauchement de temps avec un autre suggestion de type priority plus élevé alors change le temps de la suggestion la moins élevée
+            //watch priorty type and if there is a time overlap with another suggestion of higher priority type then change the time of the lower suggestion
             let toReturn = true;
-            const priority = (parameters.typePriority as TypePriority)[suggestion.type];
+            const priority = (parameters.typePriority as TypePriority)[
+                suggestion.type
+            ];
 
             proposals.value.forEach((otherSuggestion) => {
-                const priorityDiff = (parameters.typePriority as TypePriority)[otherSuggestion.type] - priority; // if other has higher priority
+                const priorityDiff =
+                    (parameters.typePriority as TypePriority)[otherSuggestion.type] -
+                    priority; // if other has higher priority
                 let userModificationsPriority = {
                     start: 0,
                     end: 0,
                 };
-
-
 
                 const indexSuggestion = {
                     start: lastIdUserModified.value.findIndex(
@@ -63,8 +66,7 @@ export function getProposals(suggestions: Suggestion[]): Suggestion[] {
                 const indexOtherSuggestion = {
                     start: lastIdUserModified.value.findIndex(
                         (element) =>
-                            element.id === otherSuggestion.id &&
-                            element.time === "startTime"
+                            element.id === otherSuggestion.id && element.time === "startTime"
                     ),
                     end: lastIdUserModified.value.findIndex(
                         (element) =>
@@ -85,42 +87,43 @@ export function getProposals(suggestions: Suggestion[]): Suggestion[] {
                     userModificationsPriority.end = 100 + indexOtherSuggestion.end;
                 }
 
-                const userModificationsPriorityDiff = userModificationsPriority.start - userModificationsPriority.end;
-
-
+                const userModificationsPriorityDiff =
+                    userModificationsPriority.start - userModificationsPriority.end;
 
                 if (
                     otherSuggestion.startTime <= suggestion.startTime &&
-                    otherSuggestion.endTime >= suggestion.endTime && otherSuggestion.id !== suggestion.id
+                    otherSuggestion.endTime >= suggestion.endTime &&
+                    otherSuggestion.id !== suggestion.id
                 ) {
-                    //suggestion est dans otherSuggestion
+                    //suggestion is inside otherSuggestion
                     if (priorityDiff > 0) {
-                        //suggestion à la priorité
-                        //Afficher les deux mais enlever la durée de la suggestion intérieur
                         toReturn = false;
                     } else {
                         toReturn = false;
                     }
                 }
 
-                //start chevauche
-
+                //start overlaps
                 else if (
                     otherSuggestion.startTime < suggestion.startTime &&
                     otherSuggestion.endTime > suggestion.startTime
                 ) {
-
                     if (
-                        (priorityDiff > 0 && userModificationsPriority.end === 0 && userModificationsPriorityDiff < 0) ||
+                        (priorityDiff > 0 &&
+                            userModificationsPriority.end === 0 &&
+                            userModificationsPriorityDiff < 0) ||
                         userModificationsPriority.start > userModificationsPriority.end
                     ) {
-                        //suggestion à la priorité
+                        //suggestion has priority
                         otherSuggestion.endTime = suggestion.startTime;
-                    } else if (priorityDiff < 0 || userModificationsPriority.end < userModificationsPriority.start) {
-                        //otherSuggestion à la priorité
+                    } else if (
+                        priorityDiff < 0 ||
+                        userModificationsPriority.end < userModificationsPriority.start
+                    ) {
+                        //otherSuggestion hay priority
                         suggestion.startTime = otherSuggestion.endTime;
                     }
-                    //si égalité de priorité alors priorité à l'intérieur de la suggestion
+                    //if equal priority then priority to the inside of the suggestion
                     else if (otherSuggestion.startTime < suggestion.startTime) {
                         suggestion.startTime = otherSuggestion.endTime;
                     } else {
@@ -151,11 +154,12 @@ export function getProposals(suggestions: Suggestion[]): Suggestion[] {
                 duration: getDurationHours(element.startTime, element.endTime),
                 inputKeyWord: res.keyWords,
                 ZebraActivity: zebraActivity,
-                title: element.title || `Activity: ${res.keyWords[0].words}, ${res.keyWords[1].words}, ${res.keyWords[2].words}`,
-            }; // faire que les inputs du calendrier soit envoyés
+                title:
+                    element.title ||
+                    `Activity: ${res.keyWords[0].words}, ${res.keyWords[1].words}, ${res.keyWords[2].words}`,
+            };
         })
         .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
     return proposals.value;
 }
-

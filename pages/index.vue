@@ -32,12 +32,20 @@
                   class="block w-fit px-5 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                 />
 
-                <div
+                <NuxtLink
+                  :to="
+                    servicesAuthStore.auth
+                      ? {
+                          name: 'dashboard-date',
+                          params: { date: dateInput.toString() },
+                        }
+                      : 'settings'
+                  "
                   @click="goToDashboard"
                   class="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary cursor-pointer"
                 >
                   Rewind
-                </div>
+                </NuxtLink>
 
                 <div
                   class="text-sm font-semibold leading-6 text-gray-900 cursor-pointer hover:text-secondary"
@@ -216,18 +224,10 @@
 
 <script setup>
 import { ref } from "vue";
-import { Dialog, DialogPanel } from "@headlessui/vue";
+
 import {
-  ArrowPathIcon,
-  ClockIcon,
-  Bars3Icon,
-  CloudArrowUpIcon,
-  FingerPrintIcon,
-  LockClosedIcon,
-  XMarkIcon,
   CalendarIcon,
   CheckCircleIcon,
-  PencilSquareIcon,
   TagIcon,
   UserGroupIcon,
   BriefcaseIcon,
@@ -235,10 +235,9 @@ import {
   PuzzlePieceIcon,
   GlobeAltIcon,
 } from "@heroicons/vue/24/outline";
-import { CheckIcon } from "@heroicons/vue/20/solid";
+
 import { useAlertsStore } from "~/stores/alerts";
 import { useServicesAuthStore } from "~/stores/servicesAuth";
-import { services } from "~/algorithms/main";
 
 const alertStore = useAlertsStore();
 const servicesAuthStore = useServicesAuthStore();
@@ -306,17 +305,6 @@ const timesheetsFeatures = [
   },
 ];
 
-const faqs = [
-  {
-    id: 1,
-    question: "What's the best thing about Switzerland?",
-    answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
-  },
-  // More questions...
-];
-
-const mobileMenuOpen = ref(false);
 const dateInput = ref("2024-06-20");
 
 function launchTutorial() {
@@ -372,11 +360,7 @@ function launchTutorial() {
 }
 
 function goToDashboard() {
-  if (servicesAuthStore.auth) {
-    navigateTo(`dashboard/${dateInput.value}`);
-  } else {
-    navigateTo("settings");
-
+  if (!servicesAuthStore.auth) {
     alertStore.addAlert({
       type: "info",
       title: "Not logged in",

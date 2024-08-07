@@ -1,4 +1,76 @@
 <template>
+  <TransitionRoot as="template" :show="open">
+    <Dialog class="relative z-10" @close="open = false">
+      <TransitionChild
+        as="template"
+        enter="ease-out duration-300"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="ease-in duration-200"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div
+          class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        />
+      </TransitionChild>
+
+      <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <DialogPanel
+              class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+            >
+              <div>
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
+                >
+                  <CheckIcon
+                    class="h-6 w-6 text-green-600"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-gray-900"
+                    >Timesheet successfully pushed</DialogTitle
+                  >
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-500">
+                      Your timesheet has been successfully sent to Zebra. You
+                      can now go back to the dashboard.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-5 sm:mt-6">
+                <NuxtLink to="/">
+                  <button
+                    type="button"
+                    class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    @click="open = false"
+                  >
+                    Go back to home
+                  </button>
+                </NuxtLink>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
   <div class="px-4 py-2 m-2 w-1/2">
     <h2 class="font-bold mb-2">Calendar</h2>
     <div
@@ -49,22 +121,29 @@
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from "vue";
 import { getSuggestions } from "../../algorithms/main";
-import type { Suggestion } from "../../types";
 import { getFormattedDurationFromMs } from "../../utils/date";
 import { useSuggestionStore } from "@/stores/suggestion";
 import { CheckCircleIcon } from "@heroicons/vue/20/solid";
 import { useRoute } from "vue-router";
 import { useServicesAuthStore } from "~/stores/servicesAuth.js";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot,
+} from "@headlessui/vue";
+import { CheckIcon } from "@heroicons/vue/24/outline";
+
+const open = ref(false);
 
 const suggestionStore = useSuggestionStore();
 const route = useRoute();
 const servicesAuthStore = useServicesAuthStore();
 
 const calendarContainer = ref<HTMLElement | null>(null);
-let oldDate: string | string[] = "";
 
 const date = ref(route.params.date);
-console.log("date parameters", date.value);
 
 const totalworked = computed(() => {
   return suggestionStore.proposals.reduce((acc, suggestion) => {
@@ -73,7 +152,6 @@ const totalworked = computed(() => {
 });
 
 const timesheetedTime = computed(() => {
-  //count the total duration of all suggestions in ms
   return suggestionStore.proposals.reduce((acc, suggestion) => {
     return acc + (suggestion.duration ?? 0) * 3600000;
   }, 0);
@@ -84,19 +162,12 @@ const difference = computed(() => {
 
 function sendToZebra() {
   suggestionStore.verifyTimsheet = true;
+  if (suggestionStore.differenceTimesheeted === 0) {
+    open.value = true;
+  }
+  open.value = true;
   suggestionStore.pushToZebra();
 }
-
-watch(
-  () => servicesAuthStore.googleAuth,
-  () => {
-    console.log("calendarRdy", servicesAuthStore.calendarRdy);
-    console.log("gisLoaded", servicesAuthStore.gisLoaded);
-    console.log("gitLoaded", servicesAuthStore.gapiLoaded);
-    console.log("zebraRdy", servicesAuthStore.zebraRdy);
-    console.log("googleAuth", servicesAuthStore.googleAuth);
-  }
-);
 
 onMounted(() => {
   console.log("mounted");
@@ -115,7 +186,6 @@ onMounted(() => {
     () => servicesAuthStore.auth,
     async (auth) => {
       if (auth) {
-        console.log("UNO");
         suggestionStore.date = date.value as string;
         await getSuggestions(
           new Date(`${date.value} 00:00:00`),

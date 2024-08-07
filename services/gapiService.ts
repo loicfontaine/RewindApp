@@ -8,13 +8,9 @@ declare global {
 import { useServicesAuthStore } from "~/stores/servicesAuth.js";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import App from "../app.vue"
+import App from "../app.vue";
 
 const pinia = createPinia();
-
-
-
-
 
 let servicesAuthStore: any;
 let config: any;
@@ -22,21 +18,18 @@ let config: any;
 type WindowWithGapi = Window & typeof globalThis & { gapi: any };
 const windowWithGapi: WindowWithGapi = window as WindowWithGapi;
 
-
-
 let tokenClient: any;
 
-
 function storeToken(token: string) {
-  localStorage.setItem('gapiToken', token);
+  localStorage.setItem("gapiToken", token);
 }
 
 function getToken() {
-  return localStorage.getItem('gapiToken');
+  return localStorage.getItem("gapiToken");
 }
 
 function clearToken() {
-  localStorage.removeItem('gapiToken');
+  localStorage.removeItem("gapiToken");
 }
 
 async function isTokenValid(token: string): Promise<boolean> {
@@ -69,7 +62,6 @@ export function gapiLoaded() {
       }
     }
   });
-
 }
 
 async function initializeGapiClient() {
@@ -79,15 +71,13 @@ async function initializeGapiClient() {
   });
   servicesAuthStore.gapiLoaded = true;
   const token = getToken();
-  if (token && await isTokenValid(token)) {
+  if (token && (await isTokenValid(token))) {
     window.gapi.client.setToken({ access_token: token });
   }
 }
 
 export function gisLoaded() {
   console.log("gisLoaded");
-
-  console.log("MY CLIENT ID", config.public.googleClientId);
 
   tokenClient = window.google.accounts.oauth2.initTokenClient({
     client_id: config.public.googleClientId,
@@ -96,7 +86,6 @@ export function gisLoaded() {
   });
   servicesAuthStore.gisLoaded = true;
 }
-
 
 export function handleAuthClick(callback: (response: any) => boolean) {
   if (servicesAuthStore.gapiLoaded && servicesAuthStore.gisLoaded) {
@@ -116,9 +105,9 @@ export function handleAuthClick(callback: (response: any) => boolean) {
       };
 
       if (window.gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({ prompt: 'consent' });
+        tokenClient.requestAccessToken({ prompt: "consent" });
       } else {
-        tokenClient.requestAccessToken({ prompt: '' });
+        tokenClient.requestAccessToken({ prompt: "" });
       }
     }
   }
@@ -129,7 +118,7 @@ export function handleSignoutClick() {
   if (token !== null) {
     window.google.accounts.oauth2.revoke(token.access_token, () => {
       clearToken(); // Clear the token from localStorage
-      window.gapi.client.setToken('');
+      window.gapi.client.setToken("");
       servicesAuthStore.googleAuth = false;
     });
   }
@@ -137,7 +126,7 @@ export function handleSignoutClick() {
 
 export function loadGapiAndGisScripts() {
   const app = createApp(App);
-  config = useRuntimeConfig()
+  config = useRuntimeConfig();
   app.use(pinia);
   servicesAuthStore = useServicesAuthStore();
   const gapiScript = document.createElement("script");
@@ -147,7 +136,7 @@ export function loadGapiAndGisScripts() {
     if (window.gapi) {
       gapiLoaded();
     } else {
-      console.log("Failed to load gapi");
+      console.error("Failed to load gapi");
     }
   };
   gapiScript.src = "https://apis.google.com/js/api.js";
@@ -160,7 +149,7 @@ export function loadGapiAndGisScripts() {
     if (window.google && window.google.accounts) {
       gisLoaded();
     } else {
-      console.log("Failed to load gis");
+      console.error("Failed to load gis");
     }
   };
   gisScript.src = "https://accounts.google.com/gsi/client";

@@ -15,9 +15,6 @@
 </template>
 
 <script lang="ts" setup>
-import { idText } from "typescript";
-import type { Suggestion } from "../types";
-import { getFormattedHours, getDurationHours } from "../utils/date";
 import { useSuggestionStore } from "~/stores/suggestion";
 
 const suggestionStore = useSuggestionStore();

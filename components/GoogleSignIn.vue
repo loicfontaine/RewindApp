@@ -37,26 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import {
-  gapiLoaded,
-  gisLoaded,
-  handleAuthClick,
-  handleSignoutClick,
-  loadGapiAndGisScripts,
-} from "../services/gapiService";
+import { handleAuthClick, handleSignoutClick } from "../services/gapiService";
 import { useServicesAuthStore } from "~/stores/servicesAuth.js";
 
 const servicesAuthStore = useServicesAuthStore();
-
-async function fetchEvents() {
-  console.log("fetching events");
-}
-
-onMounted(() => {
-  //loadGapiAndGisScripts();
-  //handleAuthClick(() => (authStore.authenticated = true));
-});
 
 function handleAuthClickWrapper() {
   handleAuthClick(() => true);

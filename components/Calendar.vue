@@ -1,6 +1,5 @@
 <
 <template>
-  <!-- Content goes here -->
   <div class="flex h-full flex-col">
     <div class="isolate flex flex-auto overflow-hidden bg-white">
       <div class="flex flex-auto flex-col overflow-auto">
@@ -10,7 +9,6 @@
         >
           <button type="button" class="flex flex-col items-center pb-1.5 pt-3">
             <span>W</span>
-            <!-- Default: "text-gray-900", Selected: "bg-gray-900 text-white", Today (Not Selected): "text-primary", Today (Selected): "bg-primary text-white" -->
             <span
               class="mt-3 flex h-8 w-8 items-center justify-center rounded-full text-base font-semibold text-gray-900"
               >19</span
@@ -314,13 +312,6 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/vue/20/solid";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import type { Suggestion } from "~/types";
 
 const container = ref<HTMLElement | null>(null);
@@ -347,15 +338,11 @@ function getGridRow(startTime: Date, endTime: Date): string {
   const startHour = startTime.getHours();
   const startMinutes = startTime.getMinutes();
 
-  // Convertir l'heure, les minutes, les secondes et les millisecondes en lignes de grille
   const startRow = startHour * 12 + startMinutes * 0.2 + 2;
 
-  // Calculer le nombre de lignes à étendre en fonction de la durée
-  // 1 minute = 0.2 ligne
   const durationInMinutes = (endTime.getTime() - startTime.getTime()) / 60000;
   const spanRows = Math.floor(durationInMinutes * 0.2);
 
-  // Retourner le format de la ligne de grille
   if (spanRows === 0) {
     return `${Math.round(startRow)} / span 1`;
   }
@@ -363,14 +350,6 @@ function getGridRow(startTime: Date, endTime: Date): string {
 }
 
 onMounted(() => {
-  // Set the container scroll position based on the current time.
-
-  /*
-  if (container.value && containerNav.value && containerOffset.value) {
-    console.log("change top");
-    container.value.scrollTop = 200;
-  }
-*/
   window.addEventListener("hashchange", () => {
     hash.value = window.location.hash;
   });

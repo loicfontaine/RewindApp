@@ -21,7 +21,6 @@ export function detectZebraActivities(keywords: KeywordsInput[]) {
   let mostActivityKeywords = userActivity.filter(activity => activity.count > activityTotal / userActivity.length);
 
 
-  //check if the mostActivityKeywords are in the mostKeywords
   const activitySuggestion = [] as any[];
 
   mostActivityKeywords.forEach((activityKeyword) => {
@@ -54,8 +53,6 @@ export function detectZebraActivities(keywords: KeywordsInput[]) {
     }
   });
   activitySuggestion.sort((a, b) => (a.probability < b.probability) ? 1 : -1);
-  //console.log("activitySuggestion", activitySuggestion)
-
   return activitySuggestion;
 }
 

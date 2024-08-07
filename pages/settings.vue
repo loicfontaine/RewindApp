@@ -91,18 +91,19 @@
             <li class="flex justify-between gap-x-6 py-6">
               <div class="font-medium text-gray-900">Browser</div>
               <div>
-                <button
-                  type="button"
+                <a
+                  href="Firefox_extension.xpi"
                   class="font-semibold text-primary hover:text-indigo-500"
                 >
                   Firefox
-                </button>
-                <button
-                  type="button"
+                </a>
+                <a
+                  href="Chrome_extension.zip"
+                  download="Chrome_extension.zip"
                   class="font-semibold text-primary hover:text-indigo-500 pl-5"
                 >
                   Chrome
-                </button>
+                </a>
               </div>
             </li>
             <li class="flex justify-between gap-x-6 py-6">
@@ -120,23 +121,9 @@
 
 <script setup>
 import { ref } from "vue";
-import {
-  Dialog,
-  DialogPanel,
-  Switch,
-  SwitchGroup,
-  SwitchLabel,
-} from "@headlessui/vue";
-import { Bars3Icon, KeyIcon, TagIcon } from "@heroicons/vue/20/solid";
-import {
-  BellIcon,
-  CreditCardIcon,
-  CubeIcon,
-  FingerPrintIcon,
-  UserCircleIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/vue/24/outline";
+
+import { KeyIcon, TagIcon } from "@heroicons/vue/20/solid";
+
 import { useServicesAuthStore } from "~/stores/servicesAuth";
 
 const servicesAuthStore = useServicesAuthStore();
@@ -146,7 +133,4 @@ const secondaryNavigation = [
   { name: "Rules", href: "#", icon: TagIcon, current: false },
 ];
 const updatezebraApiKey = ref(false);
-
-const mobileMenuOpen = ref(false);
-const automaticTimezoneEnabled = ref(true);
 </script>

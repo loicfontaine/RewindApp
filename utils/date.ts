@@ -1,5 +1,4 @@
 export function formatRFC3339(date: Date): String {
-
   const offsetMinutes = date.getTimezoneOffset();
   const absOffsetMinutes = Math.abs(offsetMinutes);
   const offsetHours = Math.floor(absOffsetMinutes / 60);
@@ -19,10 +18,7 @@ export function formatRFC3339(date: Date): String {
 }
 
 export function getFormattedHours(date: Date): String {
-
-  return `${padWithZero(date.getHours())}:${padWithZero(
-    date.getMinutes()
-  )}`;
+  return `${padWithZero(date.getHours())}:${padWithZero(date.getMinutes())}`;
 }
 function padWithZero(number: number): String {
   return number < 10 ? "0" + number : `${number}`;
@@ -41,11 +37,9 @@ export function getDurationHours(start: Date, end: Date) {
   const duration = end.getTime() - start.getTime();
   const durationHours = duration / 1000 / 60 / 60;
   return Math.round(durationHours * 4) / 4;
-
 }
 
 export function getFormattedDurationFromMs(duration: number): String {
-
   const negatif = duration < 0 ? "-" : "";
   if (duration < 0) duration = -duration;
   const durationMinutes = Math.floor(duration / 60000);

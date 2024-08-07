@@ -1,17 +1,3 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
   <Combobox as="div" v-model="selectedItem" @update:modelValue="query = ''">
     <ComboboxLabel class="block text-sm font-medium leading-6 text-gray-900"

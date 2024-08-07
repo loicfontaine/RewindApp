@@ -17,4 +17,18 @@ import { loadGapiAndGisScripts } from "./services/gapiService";
 
 const route = useRoute();
 loadGapiAndGisScripts();
+useHead({
+  title: "Rewind",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Rewind is a proof of concept to help Liip's collaborators with their timesheeting.",
+    },
+    {
+      name: "keywords",
+      content: "timesheet, liip, rewind",
+    },
+  ],
+});
 </script>

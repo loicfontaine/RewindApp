@@ -10,15 +10,12 @@ export const useActivityStore = defineStore("activity", () => {
     }
 
     function getFromName(name: string): ZebraActivityRaw | undefined {
-        return activities.value.find(activity => activity.name === name);
+        return activities.value.find((activity) => activity.name === name);
     }
-
-
 
     return {
         activities,
         fetch,
-        getFromName
-
+        getFromName,
     };
 });

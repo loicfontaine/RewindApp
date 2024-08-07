@@ -1,17 +1,3 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
   <TransitionRoot :show="open" as="template" @after-leave="query = ''" appear>
     <Dialog class="relative z-10" @close="open = false">
@@ -141,22 +127,26 @@ if (props.item === "activity") {
 
 const open = ref(true);
 const query = ref("");
-const filteredItems = computed(() =>
-  query.value === ""
-    ? []
-    : items.value
-        .filter((item) => {
-          return item.display_name
-            .toLowerCase()
-            .includes(query.value.toLowerCase());
-        })
-        .filter((item, index) => index < 10)
-);
+
+const filteredItems = computed(() => {
+  if (query.value.trim() === "") {
+    return [];
+  }
+
+  const queryWords = query.value.toLowerCase().split(" ").filter(Boolean);
+
+  return items.value
+    .filter((item) => {
+      const itemWords = item.display_name.toLowerCase().split(" ");
+      return queryWords.every((qWord) =>
+        itemWords.some((iWord) => iWord.includes(qWord))
+      );
+    })
+    .slice(0, 10);
+});
 
 const emit = defineEmits({
-  // No validation
   click: null,
-
   select({ item, type }) {
     return { item, type };
   },

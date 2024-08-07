@@ -1,17 +1,3 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
   <Disclosure as="header" class="bg-white shadow" v-slot="{ open }">
     <div
@@ -68,10 +54,10 @@
         </div>
       </div>
       <nav class="hidden lg:flex lg:space-x-8 lg:py-2" aria-label="Global">
-        <a
+        <NuxtLink
           v-for="item in navigation"
           :key="item.name"
-          :href="item.href"
+          :to="item.href"
           :class="[
             item.current
               ? 'bg-selected text-gray-900'
@@ -79,7 +65,7 @@
             'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium',
           ]"
           :aria-current="item.current ? 'page' : undefined"
-          >{{ item.name }}</a
+          >{{ item.name }}</NuxtLink
         >
       </nav>
     </div>
@@ -111,7 +97,8 @@ const emit = defineEmits({
   },
 });
 
-const dateInput = ref<Date | string>("2024-06-20"); //remove string type and value
+const dateInput = ref<Date | string>(new Date().toISOString().split("T")[0]);
+
 const navigation = [
   {
     name: "Home",
@@ -121,7 +108,7 @@ const navigation = [
   {
     name: "Settings",
     href: "/settings",
-    current: route.path.includes("settings"),
+    current: route.path === "/settings",
   },
 ];
 </script>

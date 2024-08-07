@@ -231,12 +231,10 @@ import type {
   Timesheet,
 } from "../types";
 import { TrashIcon, ChevronUpIcon, XCircleIcon } from "@heroicons/vue/24/solid";
-import { getDurationHours } from "../utils/date";
 import { useSuggestionStore } from "../stores/suggestion";
 import parameters from "../rewindconfig.json";
 
 const suggestionStore = useSuggestionStore();
-const alertStore = useAlertsStore();
 const itemType = ref("role" as "role" | "activity");
 
 const isSearchBarActive = ref(false);
