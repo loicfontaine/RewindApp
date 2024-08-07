@@ -1,0 +1,16 @@
+{
+  "calendarFilter": {
+    "summary": ["#off"]
+  },
+  "inactivityMin": 15,
+  "activityMin": 10,
+  "timesheetCard": {
+    "minNbKeywords": 7
+  },
+   "typePriority": {
+  "meeting": 1,
+  "event": 2,
+  "activity": 3
+}
+}
+
