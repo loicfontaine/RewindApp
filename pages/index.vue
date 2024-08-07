@@ -305,7 +305,7 @@ const timesheetsFeatures = [
   },
 ];
 
-const dateInput = ref("2024-06-20");
+const dateInput = ref(ref(new Date().toISOString().split("T")[0]));
 
 function launchTutorial() {
   alertStore.addAlert({
