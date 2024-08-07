@@ -33,7 +33,6 @@ export const useAlertsStore = defineStore("alerts", () => {
                 dismiss(count.value - 1);
             }, displayTime);
         }
-        console.log(alerts.value);
         return count.value;
     }
 
