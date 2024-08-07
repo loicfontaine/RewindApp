@@ -165,7 +165,6 @@ function sendToZebra() {
   if (suggestionStore.differenceTimesheeted === 0) {
     open.value = true;
   }
-  open.value = true;
   suggestionStore.pushToZebra();
 }
 

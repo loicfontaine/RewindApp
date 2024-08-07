@@ -128,14 +128,10 @@ export const useSuggestionStore = defineStore("suggestion", () => {
             alertsStore.alerts = alertsStore.alerts.filter(
                 (element: any) => element.title !== "Timesheet not validated"
             );
-            navigateTo("/");
             timesheets.value.forEach((timesheet: Timesheet) => {
                 sendToZebra(timesheet);
-            });
-            alertsStore.alerts.push({
-                type: "success",
-                title: "Timesheet validated",
-                message: `All proposals have been validated and sent to Zebra`,
+                verifyTimsheet.value = false;
+                alertsStore.alerts.length = 0;
             });
         } else {
             alertsStore.addAlert({

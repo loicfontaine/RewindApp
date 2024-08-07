@@ -73,6 +73,7 @@ export async function getSuggestions(
   if (activityStore.activities.length === 0) {
     activityStore.fetch();
   }
+  suggestionStore.proposals.length = 0;
   suggestionStore.fetch(start, end);
 
   watch(

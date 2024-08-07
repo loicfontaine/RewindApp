@@ -1,7 +1,9 @@
 <template>
   <div class="bg-white">
+    <Banner />
     <!-- Header -->
     <Header />
+
     <main class="isolate">
       <!-- Hero section -->
       <div class="relative">
