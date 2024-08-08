@@ -1,75 +1,44 @@
-# Nuxt 3 Minimal Starter
+# Rewind
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Description
 
-## Setup
+Rewind is a web application built with Nuxt.js. This application has been developped for Liip during my Bachelor thesis. My goal was to develop a Proof Of Concept (POC) to automate timesheeting.
 
-Make sure to install the dependencies:
+
+The application is deployed and publicly accessible, but you need to be Liip's employee to use the app. That's why I've deployed a demo version of my application too.
+- [Rewind application](https://rewind.lfontaine.ch/)
+- [Demo application](https://demo-rewind.lfontaine.ch/)
+
+![Rewind logo](https://github.com/loicfontaine/RewindApp/blob/main/public/logo.png?raw=true)
+## Prerequisites
+
+- **Node.js** - v18.0.0 or newer
+- **npm** - comes with Node.js (or **yarn** if you prefer)
+
+## Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/loicfontaine/RewindApp.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd RewindApp
+    ```
+
+3. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+## Development
+
+To start the development server with hot-reloading:
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
 
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
